@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HELLDIVERS II — ARMORY</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow: #ffe600;
+  --red: #ef4444;
+  --cyan: #00d4ff;
+  --green: #4ade80;
+  --bg: #05070d;
+  --text: #c8cdd8;
+  --text-dim: #5a6070;
+  --border: rgba(255,230,0,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 13px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  background: #020408;
+  border-bottom: 2px solid var(--yellow);
+  box-shadow: 0 0 40px rgba(255,230,0,0.15);
+  padding: 0 20px;
+}
+
+.header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--yellow);
+  letter-spacing: 3px;
+}
+
+.header-nav {
+  display: flex;
+  margin-left: auto;
+  height: 100%;
+}
+
+.header-nav a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  border-left: 1px solid var(--border);
+}
+
+.header-nav a.active,
+.header-nav a:hover {
+  color: #000;
+  background: var(--yellow);
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-left: 1px solid var(--border);
+  gap: 8px;
+}
+
+.ping-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* TICKER */
+.ticker-wrap {
+  background: var(--red);
+  overflow: hidden;
+  white-space: nowrap;
+  height: 26px;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  background: #000;
+  color: var(--red);
+  padding: 0 16px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-scroll {
+  display: inline-block;
+  animation: ticker 30s linear infinite;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #fff;
+  padding-right: 60px;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  flex-grow: 1;
+}
+
+/* SIDEBAR */
+.sidebar {
+  background: #04060b;
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel {
+  background: #070a12;
+  border: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 6px; height: 6px;
+  border-top: 2px solid var(--yellow);
+  border-left: 2px solid var(--yellow);
+}
+
+.panel::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 6px; height: 6px;
+  border-bottom: 2px solid var(--yellow);
+  border-right: 2px solid var(--yellow);
+}
+
+.panel-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--yellow);
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,230,0,0.08);
+}
+
+.panel-body { padding: 12px; }
+
+.filter-btn {
+  display: block;
+  width: 100%;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 7px 10px;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: 0.15s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  color: #000;
+  background: var(--yellow);
+  border-color: var(--yellow);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 11px;
+}
+
+.stat-label { color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+.stat-val { font-weight: 600; }
+
+/* MAIN */
+.main {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  color: var(--yellow);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+/* WEAPON GRID */
+.weapon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.weapon-card {
+  background: #070a12;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.weapon-card:hover { border-color: rgba(255,230,0,0.3); }
+.weapon-card:hover .weapon-name { color: var(--yellow); }
+
+.weapon-card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 6px; height: 6px;
+  border-top: 2px solid var(--yellow);
+  border-left: 2px solid var(--yellow);
+}
+
+.weapon-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 6px; height: 6px;
+  border-bottom: 2px solid var(--yellow);
+  border-right: 2px solid var(--yellow);
+}
+
+.weapon-card.locked::before,
+.weapon-card.locked::after { border-color: var(--text-dim); }
+
+.weapon-type {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.weapon-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: #fff;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  transition: color 0.15s;
+}
+
+.weapon-card.locked .weapon-name { color: var(--text-dim); }
+
+/* Stat bars */
+.stat-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  font-size: 10px;
+}
+
+.stat-bar-label {
+  width: 52px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.stat-bar-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.05);
+}
+
+.stat-bar-fill {
+  height: 100%;
+  background: var(--yellow);
+}
+
+.weapon-card.locked .stat-bar-fill { background: var(--text-dim); }
+
+.weapon-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+.badge-unlocked { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+.badge-locked { background: rgba(255,255,255,0.03); color: var(--text-dim); border: 1px solid rgba(255,255,255,0.06); }
+.badge-new { background: rgba(255,230,0,0.1); color: var(--yellow); border: 1px solid rgba(255,230,0,0.25); }
+
+/* FOOTER */
+footer {
+  background: #020408;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">SUPER EARTH // SYSTEM TERMINAL</div>
+  <div class="header-nav">
+    <a href="{% url 'home' %}">GALACTIC MAP</a>
+    <a href="{% url 'armory' %}" class="active">ARMORY</a>
+    <a href="#">STRATAGEMS</a>
+  </div>
+  <div class="header-status">
+    <div class="ping-dot"></div>
+    <span style="color: var(--green); font-size: 11px; letter-spacing: 1px;">CONNECTED</span>
+  </div>
+</header>
+
+<div class="ticker-wrap">
+  <div class="ticker-label">ALERT</div>
+  <div>
+    <span class="ticker-scroll">
+      NEW WEAPONS UNLOCKED IN THE ARMORY &bull; WARBOND SAMPLES REQUIRED &bull; DEMOCRACY DEMANDS FIREPOWER &bull;
+      NEW WEAPONS UNLOCKED IN THE ARMORY &bull; WARBOND SAMPLES REQUIRED &bull; DEMOCRACY DEMANDS FIREPOWER &bull;
+    </span>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="panel">
+      <div class="panel-header">FILTER BY TYPE</div>
+      <div class="panel-body">
+        <button class="filter-btn active">ALL WEAPONS</button>
+        <button class="filter-btn">PRIMARY</button>
+        <button class="filter-btn">SECONDARY</button>
+        <button class="filter-btn">SUPPORT</button>
+        <button class="filter-btn">GRENADES</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">HELLDIVER STATS</div>
+      <div class="panel-body">
+        <div class="stat-row">
+          <span class="stat-label">RANK</span>
+          <span class="stat-val" style="color:#fff;">PRIVATE I</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">MEDALS</span>
+          <span class="stat-val" style="color:var(--yellow);">120</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">SAMPLES</span>
+          <span class="stat-val" style="color:var(--cyan);">45</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">KILLS</span>
+          <span class="stat-val" style="color:var(--red);">2,841</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="section-title">PRIMARY WEAPONS</div>
+    <div class="weapon-grid">
+
+      <div class="weapon-card">
+        <div class="weapon-type">Assault Rifle</div>
+        <div class="weapon-name">AR-23 LIBERATOR</div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">DAMAGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:45%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">FIRE RATE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:70%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">RANGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:55%"></div></div>
+        </div>
+        <span class="weapon-badge badge-unlocked">UNLOCKED</span>
+      </div>
+
+      <div class="weapon-card">
+        <div class="weapon-type">Shotgun</div>
+        <div class="weapon-name">SG-8 PUNISHER</div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">DAMAGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:85%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">FIRE RATE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:25%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">RANGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:20%"></div></div>
+        </div>
+        <span class="weapon-badge badge-new">NEW</span>
+      </div>
+
+      <div class="weapon-card locked">
+        <div class="weapon-type">Marksman Rifle</div>
+        <div class="weapon-name">JAR-5 DOMINATOR</div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">DAMAGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:90%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">FIRE RATE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:20%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">RANGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:80%"></div></div>
+        </div>
+        <span class="weapon-badge badge-locked">LOCKED — 60 MEDALS</span>
+      </div>
+
+      <div class="weapon-card locked">
+        <div class="weapon-type">Explosive Rifle</div>
+        <div class="weapon-name">R-36 ERUPTOR</div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">DAMAGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:95%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">FIRE RATE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:10%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">RANGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:65%"></div></div>
+        </div>
+        <span class="weapon-badge badge-locked">LOCKED — 80 MEDALS</span>
+      </div>
+
+    </div>
+
+    <div class="section-title" style="margin-top: 8px;">SECONDARY WEAPONS</div>
+    <div class="weapon-grid">
+
+      <div class="weapon-card">
+        <div class="weapon-type">Pistol</div>
+        <div class="weapon-name">P-2 PEACEMAKER</div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">DAMAGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:30%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">FIRE RATE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:60%"></div></div>
+        </div>
+        <span class="weapon-badge badge-unlocked">UNLOCKED</span>
+      </div>
+
+      <div class="weapon-card locked">
+        <div class="weapon-type">Revolver</div>
+        <div class="weapon-name">GP-31 GRENADE PISTOL</div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">DAMAGE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:75%"></div></div>
+        </div>
+        <div class="stat-bar-row">
+          <span class="stat-bar-label">FIRE RATE</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:15%"></div></div>
+        </div>
+        <span class="weapon-badge badge-locked">LOCKED — 35 MEDALS</span>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<footer>
+  <span>SUPER EARTH ARMORY — AUTH LEVEL 4</span>
+  <span>DEMOCRACY DEMANDS FIREPOWER. ARM YOURSELF.</span>
+</footer>
+
+<script>
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

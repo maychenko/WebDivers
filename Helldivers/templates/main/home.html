@@ -1,0 +1,515 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HELLDIVERS II — SUPER EARTH COMMAND</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet"><style>
+:root {
+  --yellow: #ffe600;
+  --red: #ef4444;
+  --cyan: #00d4ff;
+  --green: #4ade80;
+  --bg: #05070d;
+  --text: #c8cdd8;
+  --text-dim: #5a6070;
+  --border: rgba(255,230,0,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 13px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  background: #020408;
+  border-bottom: 2px solid var(--yellow);
+  box-shadow: 0 0 40px rgba(255,230,0,0.15);
+  padding: 0 20px;
+}
+
+.header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--yellow);
+  letter-spacing: 3px;
+}
+
+.header-nav {
+  display: flex;
+  margin-left: auto;
+  height: 100%;
+}
+
+.header-nav a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  border-left: 1px solid var(--border);
+}
+
+.header-nav a.active, .header-nav a:hover {
+  color: #000;
+  background: var(--yellow);
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-left: 1px solid var(--border);
+  gap: 8px;
+}
+
+.ping-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.ticker-wrap {
+  background: var(--red);
+  overflow: hidden;
+  white-space: nowrap;
+  height: 26px;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  background: #000;
+  color: var(--red);
+  padding: 0 16px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ticker-content { display: flex; width: max-content; }
+
+.ticker-scroll {
+  display: inline-block;
+  animation: ticker-loop 30s linear infinite;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #fff;
+  padding-right: 50px;
+}
+
+@keyframes ticker-loop {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-100%, 0, 0); }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 270px 1fr 270px;
+  flex-grow: 1;
+}
+
+.sidebar {
+  background: #04060b;
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sidebar.right { border-right: none; border-left: 1px solid var(--border); }
+
+.panel {
+  background: #070a12;
+  border: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+}
+
+.panel::before, .panel::after {
+  content: '';
+  position: absolute;
+  width: 6px; height: 6px;
+}
+.panel::before { top: -1px; left: -1px; border-top: 2px solid var(--yellow); border-left: 2px solid var(--yellow); }
+.panel::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--yellow); border-right: 2px solid var(--yellow); }
+
+.panel-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--yellow);
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,230,0,0.08);
+}
+
+.panel-body { padding: 12px; }
+.log-line { display: flex; gap: 8px; padding: 3px 0; font-size: 11px; }
+.stat-row { display: flex; justify-content: space-between; padding: 4px 0; }
+.mini-bar { height: 4px; background: rgba(255,255,255,0.06); margin-top: 4px; }
+.mini-bar-fill { height: 100%; }
+.directive-item { padding: 4px 0; font-size: 11px; color: var(--text-dim); }
+.directive-item span { color: var(--yellow); font-weight: bold; margin-right: 6px; }
+
+.main {
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,230,0,0.02) 0%, transparent 70%), var(--bg);
+}
+
+.major-order {
+  position: relative;
+  margin: 16px 20px 0;
+  padding: 12px 20px;
+  background: rgba(239,68,68,0.03);
+  border: 1px solid rgba(239,68,68,0.2);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.major-order::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--red); }
+
+.order-text { flex: 1; }
+.order-label { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 3px; color: var(--red); }
+.order-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #fff; }
+.order-desc { font-size: 11px; color: rgba(200,205,216,0.5); margin-top: 4px; }
+.order-timer { text-align: right; }
+.timer-label { font-size: 9px; color: var(--text-dim); letter-spacing: 1px; }
+.timer-display { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--red); letter-spacing: 2px; }
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 40px 20px;
+}
+
+.hero h2 .text-white {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Chakra Petch', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+
+.hd-skull-img {
+  width: 80px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.hero-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 72px;
+  line-height: 0.85;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.hl-white { color: #fff; display: block; }
+.hl-yellow { color: var(--yellow); display: block; }
+
+.hero-body {
+  max-width: 500px;
+  text-align: center;
+  line-height: 1.6;
+  color: rgba(200,205,216,0.6);
+  margin-bottom: 24px;
+}
+
+.hd-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: var(--yellow);
+  background: transparent;
+  border: 2px solid var(--yellow);
+  padding: 12px 40px;
+  cursor: pointer;
+  transition: 0.15s;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+}
+.hd-btn:hover { background: var(--yellow); color: #000; box-shadow: 0 0 25px rgba(255,230,0,0.3); }
+
+.sector-area {
+  grid-column: 1 / -1;
+  background: #030509;
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,0.03);
+}
+.section-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  color: var(--yellow);
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+}
+.sectors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.sector-card {
+  background: #070a13;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 16px;
+  position: relative;
+}
+.sector-card::before, .sector-card::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+}
+.sector-card::before { top: -1px; left: -1px; border-top: 2px solid; border-left: 2px solid; }
+.sector-card::after { bottom: -1px; right: -1px; border-bottom: 2px solid; border-right: 2px solid; }
+.card-terminid::before, .card-terminid::after { border-color: var(--yellow); }
+.card-automaton::before, .card-automaton::after { border-color: var(--red); }
+.card-illuminate::before, .card-illuminate::after { border-color: var(--cyan); }
+
+.card-threat { font-size: 10px; font-weight: 600; letter-spacing: 1px; margin-bottom: 6px; }
+.threat-terminid { color: var(--yellow); }
+.threat-automaton { color: var(--red); }
+.threat-illuminate { color: var(--cyan); }
+.card-name { font-family: 'Bebas Neue', sans-serif; font-size: 24px; margin-bottom: 4px; }
+.control-bar { margin: 10px 0; }
+.bar-track { height: 6px; background: rgba(255,255,255,0.04); margin: 8px 0; }
+.bar-fill { height: 100%; transition: width 0.8s ease; }
+.bar-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); margin-top: 3px; }
+.card-status { font-size: 11px; color: rgba(200,205,216,0.55); line-height: 1.4; }
+
+.strat-list { display: flex; flex-direction: column; gap: 6px; }
+.strat-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 11px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.strat-item:last-child { border-bottom: none; }
+.strat-item.available { color: var(--yellow); }
+.strat-key { font-family: monospace; font-size: 12px; font-weight: bold; }
+
+.vital-bar { height: 24px; background: rgba(255,255,255,0.04); margin: 4px 0; display: flex; align-items: center; }
+.vital-fill { height: 100%; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 600; }
+.vital-hp { background: rgba(74,222,128,0.15); color: var(--green); border-right: 2px solid var(--green); }
+.vital-shield { background: rgba(0,212,255,0.12); color: var(--cyan); border-right: 2px solid var(--cyan); }
+
+.stat-label { color: var(--text-dim); text-transform: uppercase; font-size: 10px; letter-spacing: 1px; }
+.stat-val { font-weight: 600; }
+
+footer {
+  background: #020408;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.footer-left { font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 1px; color: var(--text-dim); }
+.footer-center { font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 2px; color: rgba(255,230,0,0.3); }
+.footer-right { display: flex; align-items: center; gap: 8px; font-family: 'Bebas Neue', sans-serif; font-size: 12px; color: var(--text-dim); }
+.panel-grow { flex-grow: 1; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">SUPER EARTH // SYSTEM TERMINAL</div>
+  <div class="header-nav">
+    <a href="{% url 'home' %}" class="active">GALACTIC MAP</a>
+    <a href="{% url 'armory' %}">ARMORY</a>
+    <a href="#">STRATAGEMS</a>
+  </div>
+  <div class="header-status">
+    <div class="ping-dot"></div>
+    <span style="color: var(--green); font-size: 11px; letter-spacing: 1px;">CONNECTED</span>
+  </div>
+</header>
+
+<div class="ticker-wrap">
+  <div class="ticker-label">ALERT</div>
+  <div class="ticker-content">
+    <div class="ticker-scroll">MALEVELON CREEK UNDER SIEGE — REINFORCE IMMEDIATELY • EASTERN SECTOR INFESTATION HIGH • DEMOCRACY IS NON-NEGOTIABLE •</div>
+    <div class="ticker-scroll">MALEVELON CREEK UNDER SIEGE — REINFORCE IMMEDIATELY • EASTERN SECTOR INFESTATION HIGH • DEMOCRACY IS NON-NEGOTIABLE •</div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="panel">
+      <div class="panel-header">COMMS LOG</div>
+      <div class="panel-body">
+        <div class="log-line"><span style="color:var(--green)">[OK]</span> <span>Uplink Established</span></div>
+        <div class="log-line"><span style="color:var(--cyan)">[INF]</span> <span>Map Synchronized</span></div>
+        <div class="log-line"><span style="color:var(--yellow)">[WRN]</span> <span>Sector 4 Breach Detected</span></div>
+        <div class="log-line"><span style="color:var(--red)">[ERR]</span> <span>Outpost 12 Signal Lost</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">DESTROYER OVERVIEW</div>
+      <div class="panel-body">
+        <div class="stat-row"><span class="stat-label">VESSEL</span><span class="stat-val" style="color:#fff;">SES HARBINGER</span></div>
+        <div class="stat-row"><span class="stat-label">STATUS</span><span class="stat-val" style="color:var(--green);">COMBAT READY</span></div>
+        <div class="mini-bar"><div class="mini-bar-fill" style="background:var(--yellow); width:84%;"></div></div>
+        <div class="mini-bar"><div class="mini-bar-fill" style="background:var(--green); width:95%;"></div></div>
+      </div>
+    </div>
+
+    <div class="panel panel-grow">
+      <div class="panel-header">SUPER EARTH DIRECTIVES</div>
+      <div class="panel-body">
+        <div class="directive-item"><span>01</span> Spread Managed Democracy across the stars.</div>
+        <div class="directive-item"><span>02</span> Freedom requires firepower.</div>
+        <div class="directive-item"><span>03</span> Doubt is the first step toward treason.</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="major-order">
+      <div class="order-text">
+        <div class="order-label">GLOBAL PRIORITY TRANSMISSION</div>
+        <div class="order-title">OPERATION CHOOHE PURGE</div>
+        <div class="order-desc">Liberate high-priority manufacturing planetary installations before the expiration windows close.</div>
+      </div>
+      <div class="order-timer">
+        <div class="timer-label">TIME REMAINING</div>
+        <div class="timer-display" id="timer">23:54:12</div>
+      </div>
+    </div>
+
+    <section class="hero">
+  <img src="{% static 'images/HDP.png' %}" alt="Skull" class="hd-skull-img">
+      <h2 class="hero-headline">
+        <span class="hl-white">SPILL BLOOD FOR</span>
+        <span class="hl-yellow">FREEDOM</span>
+      </h2>
+      <p class="hero-body">
+        Helldiver, the Galactic War escalates. On the eastern front, the Terminid plague threatens agricultural colonies. On the western front, Automaton shock legions attempt to paralyze our industrial core. Choose your drop zone.
+      </p>
+      <a href="{% url 'armory' %}" class="hd-btn">GO TO ARMORY</a>
+    </section>
+  </main>
+
+  <aside class="sidebar right">
+    <div class="panel">
+      <div class="panel-header">VITAL MONITOR</div>
+      <div class="panel-body">
+        <div class="stat-row"><span class="stat-label">HEART RATE</span><span class="stat-val" style="color:var(--green);">72 BPM</span></div>
+        <div class="stat-row"><span class="stat-label">COMBAT STIM</span><span class="stat-val">READY</span></div>
+        <div style="margin-top: 8px;">
+          <div class="vital-bar"><div class="vital-fill vital-hp" style="width:100%;">HP 100%</div></div>
+          <div class="vital-bar"><div class="vital-fill vital-shield" style="width:100%;">SHIELD MAX</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-grow">
+      <div class="panel-header">STRATAGEM UPLINK</div>
+      <div class="panel-body">
+        <div class="strat-list">
+          <div class="strat-item available"><span>500KG BOMB</span><span class="strat-key">▲</span></div>
+          <div class="strat-item available"><span>ORBITAL LASER</span><span class="strat-key">▼</span></div>
+          <div class="strat-item available"><span>EAGLE AIRSTRIKE</span><span class="strat-key">◄</span></div>
+          <div class="strat-item available"><span>SHIELD GENERATOR</span><span class="strat-key">►</span></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sector-area">
+    <div class="section-label">THE GALACTIC FRONTS</div>
+    <div class="sectors">
+      <div class="sector-card card-terminid">
+        <div class="card-threat threat-terminid">TERMINID FRONT</div>
+        <div class="card-name" style="color:var(--yellow);">ZARAGON SECTOR</div>
+        <div class="control-bar">
+          <div class="bar-track"><div class="bar-fill" style="background:var(--yellow); width:74%"></div></div>
+          <div class="bar-labels"><span>LIBERATION</span><span>74%</span></div>
+        </div>
+        <div class="card-status">E-710 extraction protocols active. Bug swarm incursions detected across sector outposts. Execution teams deployed.</div>
+      </div>
+
+      <div class="sector-card card-automaton">
+        <div class="card-threat threat-automaton">AUTOMATON SECTOR</div>
+        <div class="card-name" style="color:var(--red);">MALEVELON CREEK</div>
+        <div class="control-bar">
+          <div class="bar-track"><div class="bar-fill" style="background:var(--red); width:39%"></div></div>
+          <div class="bar-labels"><span>LIBERATION</span><span>39%</span></div>
+        </div>
+        <div class="card-status">Cyborg production complexes operating at max capacity. Planetary atmospheric interference limits initial orbital scanner ranges.</div>
+      </div>
+
+      <div class="sector-card card-illuminate">
+        <div class="card-threat threat-illuminate">SECURE SECTOR</div>
+        <div class="card-name" style="color:var(--cyan);">SOL SYSTEM</div>
+        <div class="control-bar">
+          <div class="bar-track"><div class="bar-fill" style="background:var(--cyan); width:100%"></div></div>
+          <div class="bar-labels"><span>LIBERATION</span><span>100%</span></div>
+        </div>
+        <div class="card-status">Super Earth defense grid fully operational. Democratic voting systems executing continuous background citizens sorting algorithms.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-left">SUPER EARTH SYSTEM TERMINAL — AUTH LEVEL 4</div>
+  <div class="footer-center">MANAGED DEMOCRACY IS OUR SOLEMN DUTY. DOUBT IS TREASON.</div>
+  <div class="footer-right">
+    <div class="ping-dot"></div>
+    <span>LIVE COMMS LINK</span>
+  </div>
+</footer>
+
+<script>
+let durationInSeconds = 86052;
+setInterval(() => {
+  durationInSeconds = Math.max(0, durationInSeconds - 1);
+  const h = Math.floor(durationInSeconds / 3600);
+  const m = Math.floor((durationInSeconds % 3600) / 60);
+  const s = durationInSeconds % 60;
+  document.getElementById('timer').textContent =
+    String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}, 1000);
+
+setTimeout(() => {
+  document.querySelectorAll('.bar-fill').forEach(b => {
+    const w = b.style.width;
+    b.style.width = '0';
+    setTimeout(() => { b.style.width = w; }, 50);
+  });
+}, 100);
+</script>
+</body>
+</html>
