@@ -97,6 +97,8 @@ header {
   height: 26px;
   display: flex;
   align-items: center;
+  max-width: 100%;
+  position: relative;
 }
 
 .ticker-label {
@@ -110,23 +112,30 @@ header {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
-
-.ticker-content { display: flex; width: max-content; }
+.ticker-content {
+  display: flex;
+  width: max-content;
+  animation: ticker-loop 25s linear infinite;
+  padding-left: 16px;
+}
 
 .ticker-scroll {
   display: inline-block;
-  animation: ticker-loop 30s linear infinite;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 2px;
   color: #fff;
-  padding-right: 50px;
+  padding-right: 40px;
+  flex-shrink: 0;
 }
 
+
 @keyframes ticker-loop {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-100%, 0, 0); }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .layout {
@@ -355,10 +364,13 @@ footer {
 
 <div class="ticker-wrap">
   <div class="ticker-label">ALERT</div>
+
   <div class="ticker-content">
-    <div class="ticker-scroll">MALEVELON CREEK UNDER SIEGE — REINFORCE IMMEDIATELY • EASTERN SECTOR INFESTATION HIGH • DEMOCRACY IS NON-NEGOTIABLE •</div>
-    <div class="ticker-scroll">MALEVELON CREEK UNDER SIEGE — REINFORCE IMMEDIATELY • EASTERN SECTOR INFESTATION HIGH • DEMOCRACY IS NON-NEGOTIABLE •</div>
-  </div>
+  <div class="ticker-scroll">MALEVELON CREEK UNDER SIEGE — REINFORCE IMMEDIATELY • EASTERN SECTOR INFESTATION HIGH • DEMOCRACY IS NON-NEGOTIABLE •</div>
+  <div class="ticker-scroll">MALEVELON CREEK UNDER SIEGE — REINFORCE IMMEDIATELY • EASTERN SECTOR INFESTATION HIGH • DEMOCRACY IS NON-NEGOTIABLE •</div>
+  <div class="ticker-scroll">MALEVELON CREEK UNDER SIEGE — REINFORCE IMMEDIATELY • EASTERN SECTOR INFESTATION HIGH • DEMOCRACY IS NON-NEGOTIABLE •</div>
+  <div class="ticker-scroll">MALEVELON CREEK UNDER SIEGE — REINFORCE IMMEDIATELY • EASTERN SECTOR INFESTATION HIGH • DEMOCRACY IS NON-NEGOTIABLE •</div>
+</div>
 </div>
 
 <div class="layout">

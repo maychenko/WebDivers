@@ -29,7 +29,6 @@ body {
   flex-direction: column;
 }
 
-/* HEADER */
 header {
   display: flex;
   align-items: center;
@@ -92,7 +91,6 @@ header {
   50% { opacity: 1; }
 }
 
-/* TICKER */
 .ticker-wrap {
   background: var(--red);
   overflow: hidden;
@@ -100,6 +98,8 @@ header {
   height: 26px;
   display: flex;
   align-items: center;
+  max-width: 100%;
+  position: relative;
 }
 
 .ticker-label {
@@ -112,31 +112,41 @@ header {
   height: 100%;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+
+.ticker-content {
+  display: flex;
+  width: max-content;
+  animation: ticker-loop 25s linear infinite;
+  padding-left: 16px;
 }
 
 .ticker-scroll {
   display: inline-block;
-  animation: ticker 30s linear infinite;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 2px;
   color: #fff;
-  padding-right: 60px;
+  padding-right: 40px;
+  flex-shrink: 0;
 }
 
-@keyframes ticker {
-  0% { transform: translateX(0); }
+
+@keyframes ticker-loop {
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-/* LAYOUT */
 .layout {
   display: grid;
   grid-template-columns: 250px 1fr;
   flex-grow: 1;
 }
 
-/* SIDEBAR */
 .sidebar {
   background: #04060b;
   border-right: 1px solid var(--border);
@@ -214,7 +224,6 @@ header {
 .stat-label { color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
 .stat-val { font-weight: 600; }
 
-/* MAIN */
 .main {
   padding: 20px;
   display: flex;
@@ -290,7 +299,6 @@ header {
 
 .weapon-card.locked .weapon-name { color: var(--text-dim); }
 
-/* Stat bars */
 .stat-bar-row {
   display: flex;
   align-items: center;
@@ -334,7 +342,7 @@ header {
 .badge-locked { background: rgba(255,255,255,0.03); color: var(--text-dim); border: 1px solid rgba(255,255,255,0.06); }
 .badge-new { background: rgba(255,230,0,0.1); color: var(--yellow); border: 1px solid rgba(255,230,0,0.25); }
 
-/* FOOTER */
+
 footer {
   background: #020408;
   padding: 14px 24px;
@@ -366,11 +374,13 @@ footer {
 
 <div class="ticker-wrap">
   <div class="ticker-label">ALERT</div>
-  <div>
-    <span class="ticker-scroll">
-      NEW WEAPONS UNLOCKED IN THE ARMORY &bull; WARBOND SAMPLES REQUIRED &bull; DEMOCRACY DEMANDS FIREPOWER &bull;
-      NEW WEAPONS UNLOCKED IN THE ARMORY &bull; WARBOND SAMPLES REQUIRED &bull; DEMOCRACY DEMANDS FIREPOWER &bull;
-    </span>
+  <div class="ticker-overflow">
+    <div class="ticker-content">
+      <div class="ticker-scroll">NEW WEAPONS UNLOCKED IN THE ARMORY • WARBOND SAMPLES REQUIRED • DEMOCRACY DEMANDS FIREPOWER •</div>
+      <div class="ticker-scroll">NEW WEAPONS UNLOCKED IN THE ARMORY • WARBOND SAMPLES REQUIRED • DEMOCRACY DEMANDS FIREPOWER •</div>
+      <div class="ticker-scroll">NEW WEAPONS UNLOCKED IN THE ARMORY • WARBOND SAMPLES REQUIRED • DEMOCRACY DEMANDS FIREPOWER •</div>
+      <div class="ticker-scroll">NEW WEAPONS UNLOCKED IN THE ARMORY • WARBOND SAMPLES REQUIRED • DEMOCRACY DEMANDS FIREPOWER •</div>
+    </div>
   </div>
 </div>
 
@@ -532,7 +542,6 @@ footer {
 </footer>
 
 <script>
-  // Filter buttons
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
